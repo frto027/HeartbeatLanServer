@@ -22,10 +22,15 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     BluetoothCardView[] views;
     Handler handler = new Handler();
 
-    Button broadcastToggleBtn;
+    CompoundButton broadcastToggleSwitch;
 
     final static String HEART_UUID = "00002a37-0000-1000-8000-00805f9b34fb";
 
@@ -63,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
         View root = null;
 
-        TextView nameTv;
+        TextView nameTv, heartTv, macAddrTv;
 
-        Button con_discon_btn;
+        CheckBox con_discon_btn;
 
         boolean connected = false;
 
@@ -73,8 +78,11 @@ public class MainActivity extends AppCompatActivity {
             this.dev = dev;
             root = View.inflate(MainActivity.this, R.layout.bluetooth_card, null);
             nameTv = root.findViewById(R.id.dev_name_tv);
-            con_discon_btn = root.findViewById(R.id.connect_disconnect_btn);
-            con_discon_btn.setOnClickListener((e) -> ToggleStatus());
+            heartTv = root.findViewById(R.id.dev_heart_rate_tv);
+            macAddrTv = root.findViewById(R.id.dev_mac_tv);
+            con_discon_btn = root.findViewById(R.id.connect_disconnect_toggle);
+            con_discon_btn.setChecked(connected);
+            con_discon_btn.setOnCheckedChangeListener((e,v) -> ToggleStatus(v));
             Update();
         }
 
@@ -155,8 +163,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        void ToggleStatus() {
-            connected = !connected;
+        void ToggleStatus(boolean new_status) {
+            if(connected == new_status)
+                return;
+            connected = new_status;
             if (connected) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     throw new RuntimeException("no permission");
@@ -197,13 +207,12 @@ public class MainActivity extends AppCompatActivity {
             */
             //Log.d("BLE_GETT", services);
             //nameTv.setText("Device name: " + name + " heart: " + devStatus.heartRate + " type: " + dev.getType() + "\naddr:" + dev.getAddress() + services);
-            nameTv.setText(devStatus.toString());
+            //nameTv.setText(devStatus.toString());
 
-            if(connected){
-                con_discon_btn.setText("断开");
-            }else{
-                con_discon_btn.setText("连接");
-            }
+            nameTv.setText(devStatus.name);
+            heartTv.setText(String.format(Locale.CHINA, "%d", devStatus.heartRate));
+            macAddrTv.setText(devStatus.address);
+
         }
     }
 
@@ -211,16 +220,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        bluetoothScrollView = findViewById(R.id.main_activity_scrollview);
-        broadcastToggleBtn = findViewById(R.id.broadcast_toggle_btn);
 
-        broadcastToggleBtn.setText("正在匹配新设备，点击停止");
-        broadcastToggleBtn.setOnClickListener((e)->{
-            HeartDeviceServerThread.enableBroadcast = !HeartDeviceServerThread.enableBroadcast;
+        findViewById(R.id.close_app_btn).setOnClickListener((e)-> {
+                    moveTaskToBack(true);
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(1);
+                });
+        bluetoothScrollView = findViewById(R.id.main_activity_scrollview);
+        broadcastToggleSwitch = findViewById(R.id.broadcast_toggle_switch);
+        broadcastToggleSwitch.setChecked(true);
+
+        broadcastToggleSwitch.setText(R.string.pairing_can_be_discovered);
+        broadcastToggleSwitch.setOnCheckedChangeListener((b,c)->{
+            HeartDeviceServerThread.enableBroadcast = c;
             if(HeartDeviceServerThread.enableBroadcast){
-                broadcastToggleBtn.setText("正在匹配新设备，点击停止");
+                broadcastToggleSwitch.setText(R.string.pairing_can_be_discovered);
             }else{
-                broadcastToggleBtn.setText("已停止继续匹配，点击开始");
+                broadcastToggleSwitch.setText(R.string.not_pairing_cannot_discovered);
             }
         });
 
