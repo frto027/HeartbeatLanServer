@@ -16,7 +16,5 @@
     <string name="mac_addr">Mac addr:</string>
     <string name="placeholder">placeholder</string>
     <string name="close_the_app">close app</string>
-    <string name="close_warning">
-        1. please configure your phone to keep this app live.\n2. please click the "close app" button to ensure no background task are running.
-    </string>
+    <string name="close_warning">1. please check the devices you want to use(pair it first).\n2. please configure your phone to keep this app live.\n3. please click the close app button to ensure no background task are running.</string>
 </resources>

@@ -22,28 +22,12 @@
         <CheckBox
             android:id="@+id/connect_disconnect_toggle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            />
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dev_name">
-                </TextView>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/placeholder"
-                    android:inputType="none"
-                    android:id="@+id/dev_name_tv"
-                    >
-                </TextView>
-            </androidx.appcompat.widget.LinearLayoutCompat>
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -58,6 +42,23 @@
                     android:text="@string/placeholder"
                     android:inputType="none"
                     android:id="@+id/dev_heart_rate_tv"
+                    >
+                </TextView>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dev_name">
+                </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/placeholder"
+                    android:inputType="none"
+                    android:id="@+id/dev_name_tv"
                     >
                 </TextView>
             </androidx.appcompat.widget.LinearLayoutCompat>

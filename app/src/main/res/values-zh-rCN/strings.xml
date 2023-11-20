@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">心率LAN</string>
+    <string name="action_settings">x</string>
+    <string name="first_fragment_label">x</string>
+    <string name="second_fragment_label">x</string>
+    <string name="next">x</string>
+    <string name="previous">x</string>
+    <string name="top_scrollview_desc">局域网心率发送软件</string>
+    <string name="pairing_can_be_discovered">正在配对，此手机可被其它客户端发现</string>
+    <string name="not_pairing_cannot_discovered">配对已停止，此手机不会连接新客户端</string>
+    <string name="connected">已连接</string>
+    <string name="not_connected">未连接</string>
+    <string name="dev_name">设备名：</string>
+    <string name="heart_rate">心率：</string>
+    <string name="mac_addr">MAC地址：</string>
+    <string name="placeholder">占位符</string>
+    <string name="close_the_app">关闭程序</string>
+    <string name="close_warning">1.请勾选想要使用的心率设备（请先自行蓝牙配对）\n2.务必在手机设置中允许此APP无限制后台运行（APP不含保活功能）\n3.点击下面的按钮确保后台线程被正确终止</string>
+</resources>
