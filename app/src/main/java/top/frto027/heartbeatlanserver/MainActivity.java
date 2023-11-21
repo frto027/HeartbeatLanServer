@@ -65,8 +65,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, R.string.app_selfkill,Toast.LENGTH_LONG).show();
-        HeartDeviceServerThread.close();
+        backgroundToast.show();
+        //Toast.makeText(this, R.string.app_selfkill,Toast.LENGTH_LONG).show();
+        //HeartDeviceServerThread.close();
     }
 
     class BluetoothCardView {
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                         format = BluetoothGattCharacteristic.FORMAT_UINT8;
                     }
                     devStatus.heartRate = characteristic.getIntValue(format, 1);
+                    devStatus.flag = flag;
                     HeartDeviceServerThread.getInstance().informDevStatus(devStatus);
                     TriggerUpdate();
                 }
