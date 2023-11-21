@@ -3,8 +3,8 @@ import datetime
 
 SERVER_PORT = 9965
 
-SERVER_MESSAGE = b"HeartBeatSenderHere"
-CLIENT_MESSAGE = b"HeartBeatRecHere"
+SERVER_MESSAGE = b"HeartBeatSenderHere001"
+CLIENT_MESSAGE = b"HeartBeatRecHere001"
 
 
 ############ find server ip and port ###############
