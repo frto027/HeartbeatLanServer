@@ -4,10 +4,15 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path
-        android:fillColor="#CD5757"
-        android:fillType="nonZero"
-        android:pathData="M27 27h-0.4v28l27 27h0.6l27 -27v-29h-0.3l-27 27"
-        android:strokeWidth="1"
-        android:strokeColor="#00000000" />
+  <group android:scaleX="0.8"
+      android:scaleY="0.8"
+      android:translateX="10.8"
+      android:translateY="10.8">
+      <path
+          android:fillColor="#CD5757"
+          android:fillType="nonZero"
+          android:pathData="M27 27h-0.4v28l27 27h0.6l27 -27v-29h-0.3l-27 27"
+          android:strokeWidth="1"
+          android:strokeColor="#00000000" />
+  </group>
 </vector>

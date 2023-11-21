@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        backgroundToast = Toast.makeText(this, R.string.app_background,Toast.LENGTH_LONG);
+        backgroundToast = Toast.makeText(this, R.string.app_background,Toast.LENGTH_SHORT);
         configHelper = new ConfigHelper(this);
         findViewById(R.id.close_app_btn).setOnClickListener((e)-> {
                     moveTaskToBack(true);
