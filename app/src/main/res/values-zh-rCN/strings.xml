@@ -19,4 +19,5 @@
     <string name="app_background">心率LAN将在后台继续运行……</string>
     <string name="app_selfkill">心率LAN将终止运行</string>
     <string name="close_warning">1.请勾选想要使用的心率设备（请先自行蓝牙配对）\n2.务必在手机设置中允许此APP无限制后台运行（APP不含保活功能）\n3.点击关闭按钮确保后台线程被正确终止</string>
+    <string name="protocol_ver_hint">协议版本：%s。只有相同协议版本的客户端能够连接到这台设备。</string>
 </resources>

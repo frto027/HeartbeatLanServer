@@ -61,8 +61,9 @@ public class HeartDeviceServerThread extends Thread{
 
     UdpServerThread udpServerThread = new UdpServerThread();
     class UdpServerThread extends Thread{
-        private final static String IMHERE_MAGIC = "HeartBeatSenderHere001";
-        private final static String CLIENT_MAGIC = "HeartBeatRecHere001";
+        public final static String PROTOCOL_VER = "001";
+        private final static String IMHERE_MAGIC = "HeartBeatSenderHere" + PROTOCOL_VER;
+        private final static String CLIENT_MAGIC = "HeartBeatRecHere" + PROTOCOL_VER;
 
         private boolean isMagicWord(DatagramPacket pkt, String magic){
             byte [] m = magic.getBytes();

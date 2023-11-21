@@ -204,9 +204,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        backgroundToast = Toast.makeText(this, R.string.app_background,Toast.LENGTH_LONG);
         setContentView(R.layout.activity_main);
 
+        backgroundToast = Toast.makeText(this, R.string.app_background,Toast.LENGTH_LONG);
         configHelper = new ConfigHelper(this);
         findViewById(R.id.close_app_btn).setOnClickListener((e)-> {
                     moveTaskToBack(true);
@@ -216,6 +216,10 @@ public class MainActivity extends AppCompatActivity {
         bluetoothScrollView = findViewById(R.id.main_activity_scrollview);
         broadcastToggleSwitch = findViewById(R.id.broadcast_toggle_switch);
         broadcastToggleSwitch.setChecked(true);
+
+        ((TextView)findViewById(R.id.protocol_ver_tv)).setText(
+                String.format(getText(R.string.protocol_ver_hint).toString(),
+                        HeartDeviceServerThread.UdpServerThread.PROTOCOL_VER));
 
         broadcastToggleSwitch.setText(R.string.pairing_can_be_discovered);
         broadcastToggleSwitch.setOnCheckedChangeListener((b,c)->{

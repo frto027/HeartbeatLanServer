@@ -19,7 +19,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/protocol_ver_tv"
+                android:text="@string/protocol_ver_hint"/>
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/broadcast_toggle_switch"
                 android:layout_width="match_parent"
