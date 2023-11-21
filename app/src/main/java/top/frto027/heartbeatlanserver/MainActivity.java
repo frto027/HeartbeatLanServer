@@ -9,7 +9,9 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
 import android.os.Process;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 
@@ -220,6 +223,18 @@ public class MainActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.protocol_ver_tv)).setText(
                 String.format(getText(R.string.protocol_ver_hint).toString(),
                         HeartDeviceServerThread.UdpServerThread.PROTOCOL_VER));
+        TextView licenseTv = (TextView)findViewById(R.id.license_tv);
+        licenseTv.setText(
+                Html.fromHtml("<a href='#'>"
+                        + getText(R.string.license) + "</a>", Html.FROM_HTML_MODE_LEGACY));
+        licenseTv.setOnClickListener((e)->{
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("https://github.com/frto027/HeartbeatLanServer"));
+            startActivity(i);
+            /* don't bother user. the link will remove it self once clicked. */
+            licenseTv.setOnClickListener(null);
+            licenseTv.setText(R.string.license);
+        });
 
         broadcastToggleSwitch.setText(R.string.pairing_can_be_discovered);
         broadcastToggleSwitch.setOnCheckedChangeListener((b,c)->{
