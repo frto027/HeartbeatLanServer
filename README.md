@@ -2,10 +2,12 @@
 
 Send heartrate via UDP LAN from your android phone.
 
+Download software [here](https://github.com/frto027/HeartbeatLanServer/releases/latest).
+
+在[这里](https://github.com/frto027/HeartbeatLanServer/releases/latest)下载最新版本的apk。
+
 TODO List.
 
-- English support...
-- An Icon to hint user the heartrate is sending...
 - Protocol english document...
 
 ```
@@ -47,7 +49,7 @@ there are some application. see the graph below.
 [example python client](script/client_example.py)
 
 
-[webpage server](#)
+[webpage server](https://github.com/frto027/HeartbeatLanClient)
 
 # Protocol
 
