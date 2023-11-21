@@ -3,19 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_margin="10px">
+    android:layout_margin="8dp">
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:background="@android:color/darker_gray"
         />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/placeholder"
-        android:id="@+id/dev_debug_tv"
-        android:visibility="gone"
-        android:layout_margin="10px"/>
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

@@ -16,5 +16,7 @@
     <string name="mac_addr">MAC地址：</string>
     <string name="placeholder">占位符</string>
     <string name="close_the_app">关闭程序</string>
-    <string name="close_warning">1.请勾选想要使用的心率设备（请先自行蓝牙配对）\n2.务必在手机设置中允许此APP无限制后台运行（APP不含保活功能）\n3.点击下面的按钮确保后台线程被正确终止</string>
+    <string name="app_background">心率LAN将在后台继续运行……</string>
+    <string name="app_selfkill">心率LAN将终止运行</string>
+    <string name="close_warning">1.请勾选想要使用的心率设备（请先自行蓝牙配对）\n2.务必在手机设置中允许此APP无限制后台运行（APP不含保活功能）\n3.点击关闭按钮确保后台线程被正确终止</string>
 </resources>

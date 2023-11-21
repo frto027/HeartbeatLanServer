@@ -1,5 +1,6 @@
 package top.frto027.heartbeatlanserver;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -9,12 +10,14 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
+import android.os.Process;
 import android.util.Log;
 import android.view.View;
 
@@ -35,6 +38,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+    ConfigHelper configHelper;
     LinearLayoutCompat bluetoothScrollView;
     BluetoothCardView[] views;
     Handler handler = new Handler();
@@ -44,10 +48,11 @@ public class MainActivity extends AppCompatActivity {
     final static String HEART_UUID = "00002a37-0000-1000-8000-00805f9b34fb";
 
     boolean isResume = true;
-
+    Toast backgroundToast;
     @Override
     protected void onPause() {
         super.onPause();
+        backgroundToast.show();
         isResume = false;
     }
 
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Toast.makeText(this, R.string.app_selfkill,Toast.LENGTH_LONG).show();
         HeartDeviceServerThread.close();
     }
 
@@ -81,8 +87,17 @@ public class MainActivity extends AppCompatActivity {
             heartTv = root.findViewById(R.id.dev_heart_rate_tv);
             macAddrTv = root.findViewById(R.id.dev_mac_tv);
             con_discon_btn = root.findViewById(R.id.connect_disconnect_toggle);
-            con_discon_btn.setChecked(connected);
-            con_discon_btn.setOnCheckedChangeListener((e,v) -> ToggleStatus(v));
+            if(configHelper.isMacSelected(dev.getAddress()))
+            {
+                ToggleStatus(true);
+                con_discon_btn.setChecked(true);
+            }
+            else
+                con_discon_btn.setChecked(false);
+            con_discon_btn.setOnCheckedChangeListener((e,v) ->{
+                ToggleStatus(v);
+                configHelper.setMacSelected(dev.getAddress(), v);
+            });
             Update();
         }
 
@@ -113,23 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-/*
-            @Override
-            public void onCharacteristicRead(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value, int status) {
-                super.onCharacteristicRead(gatt, characteristic, value, status);
-                if (HEART_UUID.equals(characteristic.getUuid())) {
-                    handler.post(BluetoothCardView.this::Update);
-                    handler.postDelayed(() -> {
-                        if (gatt == BluetoothCardView.this.gatt) {
-                            if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                                return;
-                            }
-                            gatt.readCharacteristic(characteristic);
-                        }
-                    }, 100);
-                }
-            }
-*/
+
             @Override
             public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
                 super.onConnectionStateChange(gatt, status, newState);
@@ -193,22 +192,6 @@ public class MainActivity extends AppCompatActivity {
             devStatus.name = dev.getName();
             devStatus.address = dev.getAddress();
 
-            /*
-            String services = "\n";
-            if(gatt != null){
-                for(BluetoothGattService serv : gatt.getServices()){
-                    services += "serve:\n";
-                    for (BluetoothGattCharacteristic ch :
-                            serv.getCharacteristics()) {
-                        services += "  " + ch.getUuid().toString() + "\n";
-                    }
-                }
-            }
-            */
-            //Log.d("BLE_GETT", services);
-            //nameTv.setText("Device name: " + name + " heart: " + devStatus.heartRate + " type: " + dev.getType() + "\naddr:" + dev.getAddress() + services);
-            //nameTv.setText(devStatus.toString());
-
             nameTv.setText(devStatus.name);
             heartTv.setText(String.format(Locale.CHINA, "%d", devStatus.heartRate));
             macAddrTv.setText(devStatus.address);
@@ -219,11 +202,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        backgroundToast = Toast.makeText(this, R.string.app_background,Toast.LENGTH_LONG);
         setContentView(R.layout.activity_main);
 
+        configHelper = new ConfigHelper(this);
         findViewById(R.id.close_app_btn).setOnClickListener((e)-> {
                     moveTaskToBack(true);
-                    android.os.Process.killProcess(android.os.Process.myPid());
+                    Process.killProcess(Process.myPid());
                     System.exit(1);
                 });
         bluetoothScrollView = findViewById(R.id.main_activity_scrollview);
@@ -240,8 +225,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{android.Manifest.permission.BLUETOOTH_CONNECT}, 1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 1);
+
             return;
         }
 
