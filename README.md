@@ -20,7 +20,7 @@ TODO List.
 └───────────┘              │   └─────────────┘        via WLAN
                            │
 ┌────────────────────────┐ │
-│BLR Heartrate Devices...├─┘
+│BLE Heartrate Devices...├─┘
 └────────────────────────┘
 ```
 
