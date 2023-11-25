@@ -4,6 +4,8 @@ Send heartrate via UDP LAN from your android phone.
 
 Download software [here](https://github.com/frto027/HeartbeatLanServer/releases/latest).
 
+This app can be installed to your Oculus quest headset, and it will only send data to the headset itself instad of lan by default.
+
 在[这里](https://github.com/frto027/HeartbeatLanServer/releases/latest)下载最新版本的apk。
 
 ```mermaid
