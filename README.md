@@ -1,4 +1,4 @@
-# HearbeatLanServer
+# HearbeatLanSender
 
 Send heartrate via UDP LAN from your android phone.
 
@@ -15,16 +15,17 @@ graph TD;
     POLAR_H10[Polar H10]
     SMART_WATCH[Shart watch, broadcast heartrate]
     BLE_DEV[other BLE heartrate devs]
-    PHONE[phone. android apk <b>YOU ARE HERE</b>]
-    BEATSABER[beatsaber quest mod]
-    PCAPP[webpage client]
+    PHONE[sender, phone. android apk <b>YOU ARE HERE</b>]
+    BEATSABER[receiver, beatsaber quest mod]
+    PCAPP[receiver, webpage client]
     BEATSABER_PC[Beatsaber PC game with HRCounter mod]
     BROWSER[browser to view config and datas]
+    EXAMPLE_PY[receiver, example.py]
 
     POLAR_H10--bluetooth-->PHONE;
     SMART_WATCH--bluetooth-->PHONE;
     BLE_DEV--bluetooth-->PHONE;
-    PHONE--LAN-->example.py;
+    PHONE--LAN-->EXAMPLE_PY;
     PHONE--LAN-->BEATSABER;
     PHONE--LAN-->PCAPP;
     PHONE--LAN-->...;
@@ -35,10 +36,10 @@ graph TD;
 
 ```
 
-[example.py](script/client_example.py)
+[receiver, example.py](script/client_example.py)
 
-[beatsaber quest mod](https://github.com/frto027/HeartBeatLanClientBSQuest)
-[webpage client](https://github.com/frto027/HeartbeatLanClient)
+[receiver, beatsaber quest mod](https://github.com/frto027/HeartBeatLanClientBSQuest)
+[receiver, webpage client](https://github.com/frto027/HeartbeatLanClient)
 
 # Protocol
 
