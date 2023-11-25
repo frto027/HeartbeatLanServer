@@ -230,6 +230,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        boolean isOculusDevice = Build.MODEL.equals("Quest") && Build.MANUFACTURER.equals("Oculus");
+        CompoundButton localModeSwitch = findViewById(R.id.local_mode_toggle);
+        localModeSwitch.setChecked(isOculusDevice);
+        HeartDeviceServerThread.LocalhostMode = isOculusDevice;
+        localModeSwitch.setOnCheckedChangeListener((v,c)->{
+            HeartDeviceServerThread.LocalhostMode = c;
+        });
+
         backgroundToast = Toast.makeText(this, R.string.app_background,Toast.LENGTH_SHORT);
         configHelper = new ConfigHelper(this);
         findViewById(R.id.close_app_btn).setOnClickListener((e)-> {

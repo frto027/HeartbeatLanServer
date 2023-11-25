@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class HeartDeviceServerThread extends Thread{
+    public volatile static boolean LocalhostMode = false;
     private final static String TAG = "HEART_RATE_SERVER";
     private static HeartDeviceServerThread instance;
 
@@ -130,18 +131,27 @@ public class HeartDeviceServerThread extends Thread{
         public void run() {
             try {
                 DatagramPacket in_pkt = new DatagramPacket(new byte[1024], 1024);
+                boolean isLocalhost = HeartDeviceServerThread.LocalhostMode;
 
                 byte [] bs = IMHERE_MAGIC.getBytes();
                 DatagramPacket imhere_pkt = new DatagramPacket(bs, bs.length);
                 imhere_pkt.setPort(9965);
-                imhere_pkt.setAddress(InetAddress.getByName("255.255.255.255"));
+                imhere_pkt.setAddress(InetAddress.getByName(isLocalhost ? "127.0.0.1":"255.255.255.255"));
 
-                broadcast_socket = new DatagramSocket(new InetSocketAddress("0.0.0.0",0));
+                broadcast_socket = new DatagramSocket(new InetSocketAddress(isLocalhost ? "127.0.0.1" : "0.0.0.0",0));
                 broadcast_socket.setSoTimeout(3000);
+
 
                 for(;;){
                     filterOutdatedClient();
-
+                    if(isLocalhost != HeartDeviceServerThread.LocalhostMode){
+                        isLocalhost = HeartDeviceServerThread.LocalhostMode;
+                        broadcast_socket.close();
+                        clients.clear();
+                        imhere_pkt.setAddress(InetAddress.getByName(isLocalhost ? "127.0.0.1":"255.255.255.255"));
+                        broadcast_socket = new DatagramSocket(new InetSocketAddress(isLocalhost ? "127.0.0.1" : "0.0.0.0",0));
+                        broadcast_socket.setSoTimeout(3000);
+                    }
                     try{
                         try{
                             broadcast_socket.receive(in_pkt);
