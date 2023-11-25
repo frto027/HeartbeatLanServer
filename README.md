@@ -17,7 +17,7 @@ graph TD;
     BLE_DEV[other BLE heartrate devs]
     PHONE[sender, phone. android apk <b>YOU ARE HERE</b>]
     BEATSABER[receiver, beatsaber quest mod]
-    PCAPP[receiver, webpage client]
+    PCAPP[receiver, a webpage server]
     BEATSABER_PC[Beatsaber PC game with HRCounter mod]
     BROWSER[browser to view config and datas]
     EXAMPLE_PY[receiver, example.py]
