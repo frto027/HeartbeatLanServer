@@ -10,46 +10,35 @@ TODO List.
 
 - Protocol english document...
 
+```mermaid
+graph TD;
+    POLAR_H10[Polar H10]
+    SMART_WATCH[Shart watch, broadcast heartrate]
+    BLE_DEV[other BLE heartrate devs]
+    PHONE[phone. android apk, <b>YOU ARE HERE</b>]
+    BEATSABER[beatsaber quest mod]
+    PCAPP[webpage client]
+    BEATSABER_PC[Beatsaber PC game with HRCounter mod]
+    BROWSER[browser, to view config and datas]
+
+    POLAR_H10--bluetooth-->PHONE;
+    SMART_WATCH--bluetooth-->PHONE;
+    BLE_DEV--bluetooth-->PHONE;
+    PHONE--LAN-->example.py;
+    PHONE--LAN-->BEATSABER;
+    PHONE--LAN-->PCAPP;
+    PHONE--LAN-->...;
+
+    PCAPP--127.0.0.1:xxxx-->BROWSER;
+    PCAPP--HRCounter protocol-->BEATSABER_PC;
+    PCAPP--a web ui(TODO)-->OBS
+
 ```
-┌─────────┐   Bluetooth(BLE)
-│POLAR H10├────────────────┐
-└─────────┘                │         YOU ARE HERE
-                           │            │
-┌───────────┐              │   ┌────────▼────┐
-│Smart watch├──────────────┼──►│Android Phone├───────►UDP Package
-└───────────┘              │   └─────────────┘        via WLAN
-                           │
-┌────────────────────────┐ │
-│BLE Heartrate Devices...├─┘
-└────────────────────────┘
-```
 
-there are some application. see the graph below.
+[example.py](script/client_example.py)
 
-
-```
-                                        ┌─────────────────────┐
-                                        │example python client│
-                                        └────────────▲────────┘
-┌─────────┐   Bluetooth(BLE)                         │
-│POLAR H10├────────────────┐                         │
-└─────────┘                │         YOU ARE HERE    │
-                           │            │            │
-┌───────────┐              │   ┌────────▼────┐       │
-│Smart watch├──────────────┼──►│Android Phone├───────┤UDP Package
-└───────────┘              │   └─────────────┘       │via WLAN
-                           │                         │
-┌────────────────────────┐ │                         │
-│BLR Heartrate Devices...├─┘                         │
-└────────────────────────┘                           │
-                                         ┌───────────▼──┐
-                                         │webpage server│
-                                         └──────────────┘
-```
-[example python client](script/client_example.py)
-
-
-[webpage server](https://github.com/frto027/HeartbeatLanClient)
+[beatsaber quest mod](https://github.com/frto027/HeartBeatLanClientBSQuest)
+[webpage client](https://github.com/frto027/HeartbeatLanClient)
 
 # Protocol
 
