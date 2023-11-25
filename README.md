@@ -36,10 +36,9 @@ graph TD;
 
 ```
 
-[receiver, example.py](script/client_example.py)
-
-[receiver, beatsaber quest mod](https://github.com/frto027/HeartBeatLanClientBSQuest)
-[receiver, webpage client](https://github.com/frto027/HeartbeatLanClient)
+- [receiver, example.py](script/client_example.py)
+- [receiver, beatsaber quest mod](https://github.com/frto027/HeartBeatLanClientBSQuest)
+- [receiver, webpage client](https://github.com/frto027/HeartbeatLanClient)
 
 # Protocol
 
