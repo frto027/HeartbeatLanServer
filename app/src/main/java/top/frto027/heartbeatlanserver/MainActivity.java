@@ -110,10 +110,16 @@ public class MainActivity extends AppCompatActivity {
         HeartDeviceStatus devStatus = new HeartDeviceStatus();
         class BluetoothGattCb extends BluetoothGattCallback {
             BluetoothGatt gatt;
-
-            @Override
-            public void onCharacteristicChanged(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value) {
-                super.onCharacteristicChanged(gatt, characteristic, value);
+            /*
+            Why we need this variable called useLatestHandleGatt:
+                Some device will use the new api : onCharacteristicChanged(gatt, chara, values)
+                However, this api is never called in quest 2 device.
+                Quest 2 use onCharacteristicChanged(gatt, chara) instead.
+                The old api is deprecated in API LEVEL 33, and I'm not sure if it will called in latest device.
+                So the stupid variable here to prevent duplicate data.
+             */
+            boolean useLatestHandleGatt = false;
+            private void handleGatt(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic){
                 if (HEART_UUID.equals(characteristic.getUuid().toString())) {
                     if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                         return;
@@ -131,7 +137,22 @@ public class MainActivity extends AppCompatActivity {
                     HeartDeviceServerThread.getInstance().informDevStatus(devStatus);
                     TriggerUpdate();
                 }
+            }
 
+            @Override
+            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+                super.onCharacteristicChanged(gatt, characteristic);
+                if(useLatestHandleGatt)
+                    return;
+                handleGatt(gatt, characteristic);
+            }
+
+
+            @Override
+            public void onCharacteristicChanged(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value) {
+                super.onCharacteristicChanged(gatt, characteristic, value);
+                useLatestHandleGatt = true;
+                handleGatt(gatt, characteristic);
             }
 
             @Override
