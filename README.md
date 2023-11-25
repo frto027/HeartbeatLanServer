@@ -6,10 +6,6 @@ Download software [here](https://github.com/frto027/HeartbeatLanServer/releases/
 
 在[这里](https://github.com/frto027/HeartbeatLanServer/releases/latest)下载最新版本的apk。
 
-TODO List.
-
-- Protocol english document...
-
 ```mermaid
 graph TD;
     POLAR_H10[Polar H10]
