@@ -15,11 +15,11 @@ graph TD;
     POLAR_H10[Polar H10]
     SMART_WATCH[Shart watch, broadcast heartrate]
     BLE_DEV[other BLE heartrate devs]
-    PHONE[phone. android apk, <b>YOU ARE HERE</b>]
+    PHONE[phone. android apk <b>YOU ARE HERE</b>]
     BEATSABER[beatsaber quest mod]
     PCAPP[webpage client]
     BEATSABER_PC[Beatsaber PC game with HRCounter mod]
-    BROWSER[browser, to view config and datas]
+    BROWSER[browser to view config and datas]
 
     POLAR_H10--bluetooth-->PHONE;
     SMART_WATCH--bluetooth-->PHONE;
@@ -31,7 +31,7 @@ graph TD;
 
     PCAPP--127.0.0.1:xxxx-->BROWSER;
     PCAPP--HRCounter protocol-->BEATSABER_PC;
-    PCAPP--a web ui(TODO)-->OBS
+    PCAPP--a web ui <b>TODO</b> -->OBS
 
 ```
 
