@@ -37,10 +37,11 @@ graph TD;
 ```
 
 - [receiver, example.py](script/client_example.py)
+- [receiver, a webpage server](https://github.com/frto027/HeartbeatLanClient) It is also possible to read heartbeat data from this receiver via http protocol.
 - [receiver, beatsaber quest mod](https://github.com/frto027/HeartBeatLanClientBSQuest)
-- [receiver, webpage client](https://github.com/frto027/HeartbeatLanClient)
 
 # Protocol
 
+[UDP Protocol](README.md)
+
 [UDP协议文档](./script/Readme.md)
-The UDP protocol is easy to use. At least I think it is...
