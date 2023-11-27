@@ -25,6 +25,10 @@ In summary, the sender does the following.
 - If any heart rate data come, for example, from bluetooth device, forward it to every rememberd receiver device.
 - Remove the receiver if the receiver don't send `HeartBeatRecHere001` to sender more than one minute.
 
+### Localhost mode
+
+In `This device only mode.` or `localhost mode`, the UDP package doesn't send to `255.255.255.255`, but to `127.0.0.1`. And the listen UDP socket doesn't bind to `0.0.0.0`, but `127.0.0.1`.
+
 # Thread Module
 
 The first version focus on usability. The protocol considers the LAN environment to be relatively secure. As long as the broadcast is turned on, everyone can find the sender and get heart data.
