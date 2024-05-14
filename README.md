@@ -40,6 +40,12 @@ graph TD;
 
 # Protocol
 
-[UDP Protocol](Protocol.md)
+Not only UDP, but also OSC Protocol is supported!
 
-[UDP协议文档](./script/Readme.md)
+For OSC user, you need add your client ip and port in the software.
+
+For UDP Protocol user, you just need open the software.
+
+~~[UDP Protocol](Protocol.md)~~
+
+~~[UDP协议文档](./script/Readme.md)~~

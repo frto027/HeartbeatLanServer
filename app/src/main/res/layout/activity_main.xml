@@ -38,6 +38,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:id="@+id/osc_listview">
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_osc_client"
+                android:id="@+id/add_osc_btn"/>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:id="@+id/main_activity_scrollview"
                 >
             </androidx.appcompat.widget.LinearLayoutCompat>

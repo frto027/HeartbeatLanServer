@@ -21,5 +21,11 @@
     <string name="close_warning">1. please check the devices you want to use(pair it first).\n2. please configure your phone to keep this app live.\n3. please click the close app button to ensure no background task are running.</string>
     <string name="protocol_ver_hint">Protocol ver: %s. Only clients with same version can connected with this device.</string>
     <string name="license">open source MIT LICENSE @frto027 2023</string>
-    <string name="localhost_mode">This device only mode. Don\'t send to lan.</string>
+    <string name="localhost_mode">Localhost only mode. Don\'t send to lan.</string>
+    <string name="add_osc_client">Add OSC Client</string>
+    <string name="input_osc_ip">Input OSC Client IP</string>
+    <string name="input_osc_ip_example">192.168.1.100:9000</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="osc_ip_list_title">OSC Client IP List(Long press to remove)</string>
 </resources>

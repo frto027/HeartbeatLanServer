@@ -1,6 +1,7 @@
 package top.frto027.heartbeatlanserver;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -9,13 +10,17 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
@@ -35,18 +40,78 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+    class AddrPort{
+        public String address;
+        public transient InetAddress addr;
+        public int port;
+
+        AddrPort(String addr, int port){
+            this.address = addr;
+            this.port = port;
+            try{
+                this.addr = InetAddress.getByName(addr);
+            }catch (UnknownHostException e){
+
+            }
+        }
+
+        void flush(){
+            if(this.addr == null){
+                try{
+                    this.addr = InetAddress.getByName(address);
+                }catch (UnknownHostException e){
+
+                }
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            return address.hashCode() ^ port;
+        }
+
+        @Override
+        public boolean equals(@Nullable Object obj) {
+            return this == obj;
+        }
+    }
     ConfigHelper configHelper;
     LinearLayoutCompat bluetoothScrollView;
+    LinearLayoutCompat oscListView;
+
+
+    final Set<AddrPort> oscClients = new HashSet<>();
     BluetoothCardView[] views;
     Handler handler = new Handler();
 
     CompoundButton broadcastToggleSwitch;
+
+
 
     final static String HEART_UUID = "00002a37-0000-1000-8000-00805f9b34fb";
 
@@ -135,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                     devStatus.heartRate = characteristic.getIntValue(format, 1);
                     devStatus.flag = flag;
                     HeartDeviceServerThread.getInstance().informDevStatus(devStatus);
+                    SendHeartRateOSC(devStatus.heartRate);
                     TriggerUpdate();
                 }
             }
@@ -275,6 +341,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ReadPreferences();
+        oscListView = findViewById(R.id.osc_listview);
+        syncOscLists();
+        findViewById(R.id.add_osc_btn).setOnClickListener((e)->{
+            //add osc
+            new OSCAddressInputDialog().setListener(new OSCAddressInputDialog.Listener() {
+                @Override
+                public void onOk(String ip, int port) {
+                    synchronized (oscClients){
+                        oscClients.add(new AddrPort(ip, port));
+                        WritePreferences();
+                    }
+                    syncOscLists();
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            }).show(getSupportFragmentManager(), "oscdialog");
+        });
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 1);
@@ -282,9 +370,44 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-
         HeartDeviceServerThread.getInstance();
         FlushBluetoothDevices();
+    }
+
+    static class AddrPortTextView extends androidx.appcompat.widget.AppCompatTextView{
+        AddrPort addrPort;
+        @SuppressLint("SetTextI18n")
+        AddrPortTextView(Context context, AddrPort addrPort){
+            super(context);
+            this.addrPort = addrPort;
+            setText(addrPort.address + " " + addrPort.port);
+            setClickable(true);
+            setTextSize(16);
+            setPadding(0,8,0,0);
+        }
+    }
+
+    private void syncOscLists(){
+        oscListView.removeAllViews();
+        TextView ftv = new TextView(this);
+        ftv.setText(R.string.osc_ip_list_title);
+        ftv.setTextSize(16);
+        oscListView.addView(ftv);
+        synchronized (oscClients){
+            for(AddrPort ip: oscClients){
+                AddrPortTextView tv = new AddrPortTextView(this, ip);
+                tv.setOnLongClickListener(v -> {
+                    AddrPort ip1 = ((AddrPortTextView)v).addrPort;
+                    synchronized (oscClients){
+                        oscClients.remove(ip1);
+                        WritePreferences();
+                    }
+                    syncOscLists();
+                    return true;
+                });
+                oscListView.addView(tv);
+            }
+        }
     }
 
     @Override
@@ -317,6 +440,74 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    void ReadPreferences(){
+        Gson gson = new Gson();
+        AddrPort[] list = gson.fromJson(getPreferences(MODE_PRIVATE).getString("oscclients", "[]"), AddrPort[].class);
+        oscClients.clear();
+        oscClients.addAll(Arrays.asList(list));
+        for (AddrPort ap :
+                oscClients) {
+            ap.flush();
+        }
+    }
+    void WritePreferences(){
+        AddrPort[] list = new AddrPort[oscClients.size()];
+        list = oscClients.toArray(list);
+        String json = new Gson().toJson(list);
+        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+        editor.putString("oscclients",json);
+        editor.apply();
+    }
 
+    DatagramSocket udpsocket_v4, udpsocket_v6;
 
+    private boolean WriteIntHeartrate = true;
+
+    private byte[] MakeOscPackage(int heartrate){
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        byte[] oscAddr = "/avatar/parameters/Heartrate3".getBytes();
+        buffer.put(oscAddr);
+        buffer.put((byte)0);
+        while(buffer.position() % 4 != 0)
+            buffer.put((byte)0);
+        if(WriteIntHeartrate){
+            buffer.put(",i".getBytes());
+            buffer.put(new byte[]{0,0});
+            buffer.order(ByteOrder.BIG_ENDIAN);
+            buffer.putInt(heartrate);
+        }else{
+            buffer.put(",f".getBytes());
+            buffer.put(new byte[]{0,0});
+            buffer.order(ByteOrder.BIG_ENDIAN);
+            buffer.putFloat(((float)heartrate)/255);
+        }
+        return Arrays.copyOf(buffer.array(), buffer.position());
+    }
+    private void SendHeartRateOSC(int heartrate){
+        // as google documented, this happens in a background thread
+        byte[] pkg = MakeOscPackage(heartrate);
+        DatagramPacket pkt = new DatagramPacket(pkg, 0, pkg.length);
+        synchronized (oscClients){
+            for(AddrPort ip : oscClients){
+                try{
+                    InetAddress addr = ip.addr;
+                    pkt.setAddress(addr);
+                    pkt.setPort(ip.port);
+
+                    if(addr instanceof Inet6Address){
+                        if(udpsocket_v6 == null){
+                            udpsocket_v6 = new DatagramSocket(new InetSocketAddress("::", 0));
+                        }
+                        udpsocket_v6.send(pkt);
+                    }else if(addr instanceof Inet4Address){
+                        if(udpsocket_v4 == null){
+                            udpsocket_v4 = new DatagramSocket(new InetSocketAddress("0.0.0.0",0));
+                        }
+                        udpsocket_v4.send(pkt);
+                    }
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
 }

@@ -22,4 +22,10 @@
     <string name="protocol_ver_hint">协议版本：%s。只有相同协议版本的客户端能够连接到这台设备。</string>
     <string name="license">开源 MIT LICENSE @frto027 2023</string>
     <string name="localhost_mode">本机模式，不发送局域网</string>
+    <string name="add_osc_client">添加OSC客户端</string>
+    <string name="input_osc_ip">输入OSC客户端IP</string>
+    <string name="input_osc_ip_example">192.168.1.100:9000</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="osc_ip_list_title">OSC客户端IP列表(长按移除)</string>
 </resources>
