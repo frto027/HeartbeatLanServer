@@ -1,3 +1,7 @@
+# To Be Simplified
+
+This project needs to be simplified. The protocol will be removed, and OSC protocol will be used as main protocol.
+
 # HearbeatLanSender
 
 Send heartrate via UDP LAN from your android phone.
