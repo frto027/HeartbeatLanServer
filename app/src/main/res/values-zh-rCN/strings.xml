@@ -28,4 +28,5 @@
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="osc_ip_list_title">OSC客户端IP列表(长按移除)</string>
+    <string name="osc_ip_hint">255表示局域网广播，可以根据您所在的局域网修正前缀</string>
 </resources>

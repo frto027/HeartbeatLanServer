@@ -28,4 +28,5 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="osc_ip_list_title">OSC Client IP List(Long press to remove)</string>
+    <string name="osc_ip_hint">255 means broadcast to all device in your local network. Change the prefix to make it work on your network.</string>
 </resources>

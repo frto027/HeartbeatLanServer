@@ -12,6 +12,13 @@
         android:textSize="24dp"
         android:gravity="center"
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="@string/osc_ip_hint"
+        android:layout_margin="16dp"
+        />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,11 +26,11 @@
 
         <EditText
             android:id="@+id/osc_ip_input_et"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
-            android:hint="192.168.1.100"
+            android:layout_marginEnd="16dp"
+            android:hint="192.168.1.255"
             app:layout_constraintEnd_toStartOf="@+id/osc_port_input_et"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
