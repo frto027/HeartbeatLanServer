@@ -18,15 +18,22 @@
     <string name="close_the_app">关闭程序</string>
     <string name="app_background">心率LAN将在后台继续运行……</string>
     <string name="app_selfkill">心率LAN将终止运行</string>
-    <string name="close_warning">1.请勾选想要使用的心率设备（请先自行蓝牙配对）\n2.务必在手机设置中允许此APP无限制后台运行（APP不含保活功能）\n3.点击关闭按钮确保后台线程被正确终止</string>
+    <string name="close_warning">基本说明：\n1.请勾选想要使用的心率设备（请先自行蓝牙配对）\n2.务必在手机设置中允许此APP无限制后台运行（APP不含保活功能）\n3.点击关闭按钮确保后台线程被正确终止</string>
     <string name="protocol_ver_hint">协议版本：%s。只有相同协议版本的客户端能够连接到这台设备。</string>
-    <string name="license">开源 MIT LICENSE @frto027 2023</string>
+    <string name="license">开源 MIT LICENSE @frto027 2023–2024</string>
     <string name="localhost_mode">本机模式，不发送局域网</string>
     <string name="add_osc_client">添加OSC客户端</string>
     <string name="input_osc_ip">输入OSC客户端IP</string>
     <string name="input_osc_ip_example">192.168.1.100:9000</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
-    <string name="osc_ip_list_title">OSC客户端IP列表(长按移除)</string>
+    <string name="osc_ip_list_title">OSC客户端IP列表</string>
     <string name="osc_ip_hint">255表示局域网广播，可以根据您所在的局域网修正前缀</string>
+    <string name="config_osc_protocol">设置OSC协议</string>
+    <string name="config_udp_protocol_outdated">设置UDP协议(已过时)</string>
+    <string name="enable_udp_protocol">启用UDP协议</string>
+    <string name="title_activity_udpprotocol">UDP协议设置</string>
+    <string name="title_activity_osc_protocol">OSC协议设置</string>
+    <string name="back">返回</string>
+
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HeartBeatLanServer</string>
+    <string name="app_name">HeartBeatLAN</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -16,17 +16,23 @@
     <string name="mac_addr">Mac addr:</string>
     <string name="placeholder">placeholder</string>
     <string name="close_the_app">close app</string>
-    <string name="app_background">the heartbeat lan app will continue runs in background...</string>
+    <string name="app_background">the heartbeat lan app will continue runs in background…</string>
     <string name="app_selfkill">the heartbeat lan app will stop.</string>
-    <string name="close_warning">1. please check the devices you want to use(pair it first).\n2. please configure your phone to keep this app live.\n3. please click the close app button to ensure no background task are running.</string>
+    <string name="close_warning">Basic Usage:\n1. please check the devices you want to use(pair it first).\n2. please configure your phone to keep this app live.\n3. please click the close app button to ensure no background task are running.</string>
     <string name="protocol_ver_hint">Protocol ver: %s. Only clients with same version can connected with this device.</string>
-    <string name="license">open source MIT LICENSE @frto027 2023</string>
+    <string name="license">open source MIT LICENSE @frto027 2023–2024</string>
     <string name="localhost_mode">Localhost only mode. Don\'t send to lan.</string>
     <string name="add_osc_client">Add OSC Client</string>
     <string name="input_osc_ip">Input OSC Client IP</string>
     <string name="input_osc_ip_example">192.168.1.100:9000</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="osc_ip_list_title">OSC Client IP List(Long press to remove)</string>
-    <string name="osc_ip_hint">255 means broadcast to all device in your local network. Change the prefix to make it work on your network.</string>
+    <string name="osc_ip_list_title">OSC Client IP List</string>
+    <string name="osc_ip_hint">255 means broadcast tjo all device in your local network. Change the prefix to make it work on your network.</string>
+    <string name="config_osc_protocol">Config OSC Protocol</string>
+    <string name="config_udp_protocol_outdated">Config UDP Protocol(Outdated)</string>
+    <string name="enable_udp_protocol">Enable UDP Protocol</string>
+    <string name="title_activity_udpprotocol">UDP Protocol config</string>
+    <string name="title_activity_osc_protocol">OSC Protocol config</string>
+    <string name="back">back</string>
 </resources>

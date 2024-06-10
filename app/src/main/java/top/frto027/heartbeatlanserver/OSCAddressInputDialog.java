@@ -51,6 +51,8 @@ public class OSCAddressInputDialog extends DialogFragment {
                         //check ip format
                         try{
                             String ip = inputIp.getText().toString();
+                            if(ip.equals(""))
+                                ip = inputIp.getHint().toString();
                             InetAddress.getByName(ip);
                             int port = Integer.parseInt(inputPort.getText().toString());
                             SharedPreferences.Editor editor = getActivity().getPreferences(Context.MODE_PRIVATE).edit();

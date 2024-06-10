@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import android.widget.Button;
@@ -65,51 +66,12 @@ import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
-    class AddrPort{
-        public String address;
-        public transient InetAddress addr;
-        public int port;
-
-        AddrPort(String addr, int port){
-            this.address = addr;
-            this.port = port;
-            try{
-                this.addr = InetAddress.getByName(addr);
-            }catch (UnknownHostException e){
-
-            }
-        }
-
-        void flush(){
-            if(this.addr == null){
-                try{
-                    this.addr = InetAddress.getByName(address);
-                }catch (UnknownHostException e){
-
-                }
-            }
-        }
-
-        @Override
-        public int hashCode() {
-            return address.hashCode() ^ port;
-        }
-
-        @Override
-        public boolean equals(@Nullable Object obj) {
-            return this == obj;
-        }
-    }
     ConfigHelper configHelper;
     LinearLayoutCompat bluetoothScrollView;
-    LinearLayoutCompat oscListView;
 
 
-    final Set<AddrPort> oscClients = new HashSet<>();
     BluetoothCardView[] views;
     Handler handler = new Handler();
-
-    CompoundButton broadcastToggleSwitch;
 
 
 
@@ -199,8 +161,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                     devStatus.heartRate = characteristic.getIntValue(format, 1);
                     devStatus.flag = flag;
-                    HeartDeviceServerThread.getInstance().informDevStatus(devStatus);
-                    SendHeartRateOSC(devStatus.heartRate);
+                    if(UDPProtocol.protocolEnabled){
+                        HeartDeviceServerThread.getInstance().informDevStatus(devStatus);
+                    }
+                    if(OSCProtocol.protocolEnabled){
+                        SendHeartRateOSC(devStatus.heartRate);
+                    }
                     TriggerUpdate();
                 }
             }
@@ -290,19 +256,15 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
+    Toolbar myToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        boolean isOculusDevice = Build.MODEL.equals("Quest") && Build.MANUFACTURER.equals("Oculus");
-        CompoundButton localModeSwitch = findViewById(R.id.local_mode_toggle);
-        localModeSwitch.setChecked(isOculusDevice);
-        HeartDeviceServerThread.LocalhostMode = isOculusDevice;
-        localModeSwitch.setOnCheckedChangeListener((v,c)->{
-            HeartDeviceServerThread.LocalhostMode = c;
-        });
+        myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark, getTheme()));
 
         backgroundToast = Toast.makeText(this, R.string.app_background,Toast.LENGTH_SHORT);
         configHelper = new ConfigHelper(this);
@@ -312,12 +274,7 @@ public class MainActivity extends AppCompatActivity {
                     System.exit(1);
                 });
         bluetoothScrollView = findViewById(R.id.main_activity_scrollview);
-        broadcastToggleSwitch = findViewById(R.id.broadcast_toggle_switch);
-        broadcastToggleSwitch.setChecked(true);
 
-        ((TextView)findViewById(R.id.protocol_ver_tv)).setText(
-                String.format(getText(R.string.protocol_ver_hint).toString(),
-                        HeartDeviceServerThread.UdpServerThread.PROTOCOL_VER));
         TextView licenseTv = (TextView)findViewById(R.id.license_tv);
         licenseTv.setText(
                 Html.fromHtml("<a href='#'>"
@@ -331,37 +288,9 @@ public class MainActivity extends AppCompatActivity {
             licenseTv.setText(R.string.license);
         });
 
-        broadcastToggleSwitch.setText(R.string.pairing_can_be_discovered);
-        broadcastToggleSwitch.setOnCheckedChangeListener((b,c)->{
-            HeartDeviceServerThread.enableBroadcast = c;
-            if(HeartDeviceServerThread.enableBroadcast){
-                broadcastToggleSwitch.setText(R.string.pairing_can_be_discovered);
-            }else{
-                broadcastToggleSwitch.setText(R.string.not_pairing_cannot_discovered);
-            }
-        });
+        OSCProtocol.ReadPreferences(this);
 
-        ReadPreferences();
-        oscListView = findViewById(R.id.osc_listview);
-        syncOscLists();
-        findViewById(R.id.add_osc_btn).setOnClickListener((e)->{
-            //add osc
-            new OSCAddressInputDialog().setListener(new OSCAddressInputDialog.Listener() {
-                @Override
-                public void onOk(String ip, int port) {
-                    synchronized (oscClients){
-                        oscClients.add(new AddrPort(ip, port));
-                        WritePreferences();
-                    }
-                    syncOscLists();
-                }
 
-                @Override
-                public void onCancel() {
-
-                }
-            }).show(getSupportFragmentManager(), "oscdialog");
-        });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
@@ -372,43 +301,16 @@ public class MainActivity extends AppCompatActivity {
 
         HeartDeviceServerThread.getInstance();
         FlushBluetoothDevices();
+
+        findViewById(R.id.config_osc_activity_btn).setOnClickListener((v)->{
+            startActivity(new Intent(this, OSCProtocol.class));
+        });
+        findViewById(R.id.config_udp_activity_btn).setOnClickListener((v)->{
+            startActivity(new Intent(this, UDPProtocol.class));
+        });
     }
 
-    static class AddrPortTextView extends androidx.appcompat.widget.AppCompatTextView{
-        AddrPort addrPort;
-        @SuppressLint("SetTextI18n")
-        AddrPortTextView(Context context, AddrPort addrPort){
-            super(context);
-            this.addrPort = addrPort;
-            setText(addrPort.address + " " + addrPort.port);
-            setClickable(true);
-            setTextSize(16);
-            setPadding(0,8,0,0);
-        }
-    }
 
-    private void syncOscLists(){
-        oscListView.removeAllViews();
-        TextView ftv = new TextView(this);
-        ftv.setText(R.string.osc_ip_list_title);
-        ftv.setTextSize(16);
-        oscListView.addView(ftv);
-        synchronized (oscClients){
-            for(AddrPort ip: oscClients){
-                AddrPortTextView tv = new AddrPortTextView(this, ip);
-                tv.setOnLongClickListener(v -> {
-                    AddrPort ip1 = ((AddrPortTextView)v).addrPort;
-                    synchronized (oscClients){
-                        oscClients.remove(ip1);
-                        WritePreferences();
-                    }
-                    syncOscLists();
-                    return true;
-                });
-                oscListView.addView(tv);
-            }
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -440,25 +342,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void ReadPreferences(){
-        Gson gson = new Gson();
-        AddrPort[] list = gson.fromJson(getPreferences(MODE_PRIVATE).getString("oscclients", "[]"), AddrPort[].class);
-        oscClients.clear();
-        oscClients.addAll(Arrays.asList(list));
-        for (AddrPort ap :
-                oscClients) {
-            ap.flush();
-        }
-    }
-    void WritePreferences(){
-        AddrPort[] list = new AddrPort[oscClients.size()];
-        list = oscClients.toArray(list);
-        String json = new Gson().toJson(list);
-        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-        editor.putString("oscclients",json);
-        editor.apply();
-    }
-
     DatagramSocket udpsocket_v4, udpsocket_v6;
 
     private boolean WriteIntHeartrate = true;
@@ -487,8 +370,8 @@ public class MainActivity extends AppCompatActivity {
         // as google documented, this happens in a background thread
         byte[] pkg = MakeOscPackage(heartrate);
         DatagramPacket pkt = new DatagramPacket(pkg, 0, pkg.length);
-        synchronized (oscClients){
-            for(AddrPort ip : oscClients){
+        synchronized (OSCProtocol.oscClients){
+            for(OSCProtocol.AddrPort ip : OSCProtocol.oscClients){
                 try{
                     InetAddress addr = ip.addr;
                     pkt.setAddress(addr);

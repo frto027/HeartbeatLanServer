@@ -3,6 +3,9 @@
     <style name="Base.Theme.HeartBeatLanServer" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#FFDE03</item>
+        <item name="colorPrimaryDark">#A59003</item>
+        <item name="android:textColorPrimary">#000000</item>
     </style>
 
     <style name="Theme.HeartBeatLanServer" parent="Base.Theme.HeartBeatLanServer" />
