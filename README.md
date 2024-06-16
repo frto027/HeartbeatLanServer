@@ -1,6 +1,6 @@
 # HearbeatLanSender
 
-A OSC heartrate sender for Android device.
+An OSC heart rate sender for Android device.
 
 Download software [here](https://github.com/frto027/HeartbeatLanServer/releases/latest).
 
